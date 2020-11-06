@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dio/view/login_view.dart';
+import 'package:flutter_dio/view/login/login_view.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,6 +10,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.

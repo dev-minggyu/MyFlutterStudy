@@ -1,4 +1,4 @@
-class Login {
+class LoginRequest {
   String userId;
   String passwd;
   int companyCode;
@@ -6,7 +6,7 @@ class Login {
   String deviceModel;
   String osType;
 
-  Login(
+  LoginRequest(
       {this.userId,
       this.passwd,
       this.companyCode,
@@ -14,8 +14,8 @@ class Login {
       this.deviceModel,
       this.osType});
 
-  Login fromJson(Map<String, dynamic> json) {
-    return Login(
+  LoginRequest fromJson(Map<String, dynamic> json) {
+    return LoginRequest(
       userId: json['userId'] as String,
       passwd: json['passwd'] as String,
       companyCode: json['companyCode'] as int,
@@ -23,12 +23,6 @@ class Login {
       deviceModel: json['deviceModel'] as String,
       osType: json['osType'] as String,
     );
-    // userId = json['userId'];
-    // passwd = json['passwd'];
-    // companyCode = json['companyCode'];
-    // pushToken = json['pushToken'];
-    // deviceModel = json['deviceModel'];
-    // osType = json['osType'];
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{

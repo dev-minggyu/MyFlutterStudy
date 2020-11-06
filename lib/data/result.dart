@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_dio/constant/network_constant.dart';
 import 'package:flutter_dio/helper/network_helper.dart';
 
 class Result<T> {
@@ -32,7 +33,16 @@ class Result<T> {
 
   static Result<T> returnResponse<T>(Response response, T data) {
     if (response.statusCode == ResponseCode.success) {
-      return Result.success(data);
+      int resultCode = response.data['result_code'];
+      if (resultCode == NetworkConstant.SUCCESS) {
+        return Result.success(data);
+      } else {
+        return Result.error(
+            errCode: resultCode,
+            errMsg: response.data['error_msg'],
+            errBdy: response.data.toString(),
+            data: null);
+      }
     } else if (response.statusCode == ResponseCode.unavailableInternet) {
       return Result.error(errCode: response.statusCode, errMsg: '', data: null);
     } else {

@@ -23,8 +23,10 @@ environment:
 dependencies:
   http: ^0.12.2
   dio: ^3.0.10
-
-
+  scoped_model: ^1.0.1
+  progress_dialog: ^1.2.4
+  device_info: ^1.0.0
+  flutter_secure_storage: ^3.3.5
 
 
 
@@ -87,6 +89,7 @@ dev_dependencies:
 flutter:
   assets:
     - raw/
+    - res/images/
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
