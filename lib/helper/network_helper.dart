@@ -1,117 +1,58 @@
-import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:dio/adapter.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dio/constant/network_constant.dart';
+import 'package:http/http.dart' as _http;
 
 class NetworkHelper {
-  Dio _dio;
-  List<int> _certBytes;
-
-  NetworkHelper() {
-    BaseOptions options = BaseOptions(
-        baseUrl: NetworkConstant.BASE_URL,
-        receiveTimeout: NetworkConstant.TIMEOUT,
-        connectTimeout: NetworkConstant.TIMEOUT);
-    _dio = Dio(options);
-    _dio.interceptors
-        .add(LogInterceptor(requestBody: true, responseBody: true));
-  }
-
-  setCertificate(Dio dio) async {
-    if (_certBytes == null) {
-      _certBytes = (await rootBundle.load('raw/cert.pem')).buffer.asInt8List();
+  get(String url) async {
+    final response = await _http.get(NetworkConstant.BASE_URL + url);
+    print(response.body);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
     } else {
-      return;
+      throw Exception('Error');
     }
-    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-        (client) {
-      SecurityContext sc = SecurityContext(withTrustedRoots: true);
-      sc.setTrustedCertificatesBytes(_certBytes);
-      HttpClient httpClient = HttpClient(context: sc);
-      return httpClient;
-    };
   }
 
-  Future<Response<dynamic>> get(String url) async {
-    await setCertificate(_dio);
-    Response response;
-    try {
-      response = await _dio.get(url,
-          options: Options(responseType: ResponseType.json));
-      response.data = jsonDecode(response.toString());
-    } on SocketException {
-      response = Response();
-      response.statusCode = ResponseCode.unavailableInternet;
-      response.statusMessage = '';
-    } on Exception {
-      response = Response();
-      response.statusCode = ResponseCode.unknown;
-      response.statusMessage = '';
+  getWithParam(String url, Map<String, dynamic> params) async {
+    final response = await _http.get(NetworkConstant.BASE_URL + url);
+    print(response.body);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Error');
     }
-    return response;
   }
 
-  Future<Response<dynamic>> getWithParam(
-      String url, Map<String, dynamic> params) async {
-    await setCertificate(_dio);
-    Response response;
-    try {
-      // final result = await InternetAddress.lookup('google.com');
-      // if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-      response = await _dio.get(url,
-          queryParameters: params,
-          options: Options(responseType: ResponseType.json));
-      response.data = jsonDecode(response.toString());
-      // }
-    } on SocketException {
-      response = Response();
-      response.statusCode = ResponseCode.unavailableInternet;
-      response.statusMessage = '';
-    } on Exception {
-      response = Response();
-      response.statusCode = ResponseCode.unknown;
-      response.statusMessage = '';
+  post(String url, Map<String, dynamic> body) async {
+    final response = await _http.post(NetworkConstant.BASE_URL + url,
+        body: jsonEncode(body));
+    print(response.body);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Error');
     }
-    return response;
   }
 
-  Future<Response> post(String url, Map<String, dynamic> params) async {
-    await setCertificate(_dio);
-    Response response;
-    try {
-      response = await _dio.post(url,
-          data: params, options: Options(responseType: ResponseType.json));
-      response.data = jsonDecode(response.toString());
-    } on SocketException {
-      response = Response();
-      response.statusCode = ResponseCode.unavailableInternet;
-      response.statusMessage = '';
-    } on Exception {
-      response = Response();
-      response.statusCode = ResponseCode.unknown;
-      response.statusMessage = '';
+  put(String url) async {
+    final response = await _http.put(NetworkConstant.BASE_URL + url);
+    print(response.body);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Error');
     }
-    return response;
   }
 
-  Future<Response> put(String url, Map<String, dynamic> params) async {
-    await setCertificate(_dio);
-    Response response = await _dio.put(url,
-        data: params, options: Options(responseType: ResponseType.json));
-    response.data = jsonDecode(response.toString());
-    return response;
-  }
-
-  Future<Response> delete(String url, Map<String, dynamic> params) async {
-    await setCertificate(_dio);
-    Response response = await _dio.delete(url,
-        data: params, options: Options(responseType: ResponseType.json));
-    response.data = jsonDecode(response.toString());
-    return response;
+  delete(String url) async {
+    final response = await _http.delete(NetworkConstant.BASE_URL + url);
+    print(response.body);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Error');
+    }
   }
 }
 

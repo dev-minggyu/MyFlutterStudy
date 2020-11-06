@@ -24,7 +24,7 @@ class Repository {
           osType: osType);
       final response = await networkHelper.post(LOGIN, login.toJson());
       return Result.returnResponse(
-          response, LoginResponse().fromJson(response.data['resultData']));
+          response, LoginResponse().fromJson(response['resultData']));
     } catch (error, stacktrace) {
       print(error.toString());
       return Result.error(
@@ -39,7 +39,7 @@ class Repository {
     try {
       final response = await networkHelper.get(LOGIN_COMPANY_LIST);
       return Result.returnResponse(
-          response, CompanyList().fromJson(response.data['resultData']));
+          response, CompanyList().fromJson(response['resultData']));
     } catch (error, stacktrace) {
       print(error.toString());
       return Result.error(
