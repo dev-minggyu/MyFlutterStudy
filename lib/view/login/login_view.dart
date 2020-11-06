@@ -151,5 +151,6 @@ class _LoginViewState extends State<LoginView> {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       return iosInfo.model;
     }
+    return "";
   }
 }
