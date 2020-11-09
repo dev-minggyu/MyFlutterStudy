@@ -16,7 +16,7 @@ class DocumentCount {
       this.futureIngCount,
       this.afterIngCount});
 
-  DocumentCount test() {
+  DocumentCount initToZero() {
     return DocumentCount(
         ingCount: 0,
         doneCount: 0,

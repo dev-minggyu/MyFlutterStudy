@@ -14,7 +14,7 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   HomeViewModel _homeViewModel;
   LoginResponse _userInfo;
-  DocumentCount _documentCount = DocumentCount();
+  DocumentCount _documentCount;
 
   Image logoImage;
   Image logoImage2;
@@ -27,7 +27,7 @@ class _HomeViewState extends State<HomeView> {
 
     _homeViewModel = HomeViewModel();
     _userInfo = LoginResponse();
-    _documentCount = DocumentCount().test();
+    _documentCount = DocumentCount().initToZero();
     loadUserInfo();
     _getDocumentCount();
   }
