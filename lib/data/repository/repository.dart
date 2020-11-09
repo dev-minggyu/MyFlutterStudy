@@ -1,6 +1,7 @@
 import 'package:flutter_dio/constant/common_constant.dart';
 import 'package:flutter_dio/data/model/request/login.dart';
 import 'package:flutter_dio/data/model/response/company.dart';
+import 'package:flutter_dio/data/model/response/document_count.dart';
 import 'package:flutter_dio/data/model/response/login.dart';
 import 'package:flutter_dio/data/result.dart';
 import 'package:flutter_dio/helper/network_helper.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class Repository {
   static const LOGIN = 'login';
   static const LOGIN_COMPANY_LIST = 'login/company';
+  static const DOCUMENT_COUNT = 'e-sign';
 
   final FlutterSecureStorage _storage = FlutterSecureStorage();
 
@@ -37,7 +39,7 @@ class Repository {
 
   loginCompanyList() async {
     try {
-      final response = await networkHelper.get(LOGIN_COMPANY_LIST);
+      final response = await networkHelper.get(LOGIN_COMPANY_LIST, null);
       return Result.returnResponse(
           response, CompanyList().fromJson(response['resultData']));
     } catch (error, stacktrace) {
@@ -48,6 +50,32 @@ class Repository {
           errBdy: stacktrace.toString(),
           data: null);
     }
+  }
+
+  documentCount() async {
+    try {
+      final response =
+          await networkHelper.get(DOCUMENT_COUNT, await getHeaders());
+      return Result.returnResponse(
+          response, DocumentCount().fromJson(response['resultData']));
+    } catch (error, stacktrace) {
+      print(error.toString());
+      return Result.error(
+          errCode: ResponseCode.unknown,
+          errMsg: error.toString(),
+          errBdy: stacktrace.toString(),
+          data: null);
+    }
+  }
+
+  getHeaders() async {
+    LoginResponse loginInfo = await loadUserInfo();
+    Map<String, String> requestHeaders = {
+      'enumber': loginInfo.enumber.toString(),
+      'accessToken': loginInfo.accessToken,
+      'companyCode': loginInfo.companyCode.toString()
+    };
+    return requestHeaders;
   }
 
   saveUserInfo(LoginResponse loginResponse) async {

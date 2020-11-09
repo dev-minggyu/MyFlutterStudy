@@ -4,8 +4,9 @@ import 'package:flutter_dio/constant/network_constant.dart';
 import 'package:http/http.dart' as _http;
 
 class NetworkHelper {
-  get(String url) async {
-    final response = await _http.get(NetworkConstant.BASE_URL + url);
+  get(String url, Map<String, String> headers) async {
+    final response =
+        await _http.get(NetworkConstant.BASE_URL + url, headers: headers);
     print(response.body);
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
