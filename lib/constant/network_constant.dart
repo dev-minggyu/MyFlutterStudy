@@ -1,5 +1,8 @@
 class NetworkConstant {
-  static const String BASE_URL = 'https://esign.gemvaxlink.com/';
+  static const String BASE_URL =
+      'http://192.168.0.82:15000/gemvaxlinkAPI-0.0.1-BUILD-SNAPSHOT/';
+
+  // static const String BASE_URL = 'https://esign.gemvaxlink.com/';
   static const int TIMEOUT = 10000;
 
   static const int SUCCESS = 0;
