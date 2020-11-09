@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:device_info/device_info.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dio/constant/asset_constant.dart';
 import 'package:flutter_dio/constant/common_constant.dart';
 import 'package:flutter_dio/data/model/response/company.dart';
 import 'package:flutter_dio/data/result.dart';
+import 'package:flutter_dio/utils/hex_color.dart';
 import 'package:flutter_dio/view/home/home_view.dart';
 import 'package:flutter_dio/view/login/login_view_model.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -31,12 +33,13 @@ class _LoginViewState extends State<LoginView> {
     super.initState();
     _loginViewModel = LoginViewModel();
     _progressDialog = ProgressDialog(context);
+    _progressDialog.style(progressWidget: CircularProgressIndicator());
     _getCompanyList();
   }
 
   String requiredFieldValidator(String value) {
     if (value.isEmpty) {
-      return 'Required';
+      return '필수 입력';
     }
     return null;
   }
@@ -46,67 +49,81 @@ class _LoginViewState extends State<LoginView> {
     return Scaffold(
       body: AutofillGroup(
         child: Form(
-          key: _formKey,
-          child: ListView(padding: const EdgeInsets.all(32.0), children: [
-            Padding(
-                padding: EdgeInsets.only(top: 70),
-                child: Wrap(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Image.asset(AssetConstant.LOGIN_LOGO),
-                        Text("로그인",
-                            style: const TextStyle(
-                                color: const Color(0xff212121), fontSize: 33.0))
-                      ],
+            key: _formKey,
+            child: Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                        padding: EdgeInsets.only(top: 70),
+                        child: Wrap(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.asset(AssetConstant.LOGIN_LOGO),
+                                Text("로그인",
+                                    style: const TextStyle(
+                                        color: const Color(0xff212121),
+                                        fontSize: 33.0))
+                              ],
+                            )
+                          ],
+                        )),
+                    SizedBox(height: 40),
+                    DropdownButton(
+                      isExpanded: true,
+                      items: companyList.map((item) {
+                        return DropdownMenuItem(
+                          child: Text(item.company),
+                          value: item.companyCode,
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedCompany = value;
+                        });
+                      },
+                      value: _selectedCompany,
+                    ),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      validator: requiredFieldValidator,
+                      controller: _usernameTextController,
+                      autofillHints: [AutofillHints.username],
+                      decoration: InputDecoration(hintText: '사용자 ID'),
+                    ),
+                    SizedBox(height: 20),
+                    TextFormField(
+                      validator: requiredFieldValidator,
+                      controller: _passwordTextController,
+                      autofillHints: [AutofillHints.password],
+                      obscureText: true,
+                      decoration: InputDecoration(hintText: '비밀번호'),
+                    ),
+                    Spacer(),
+                    SizedBox(
+                      height: 45,
+                      width: double.infinity,
+                      child: MaterialButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        highlightColor: HexColor("#2f74b8"),
+                        color: HexColor("#2096f1"),
+                        onPressed: () async {
+                          if (!_formKey.currentState.validate()) return;
+                          _processLogin();
+                        },
+                        child: Text("확인",
+                            style: TextStyle(
+                                color: HexColor("#ffffff"), fontSize: 17.0),
+                            textAlign: TextAlign.center),
+                      ),
                     )
-                  ],
-                )),
-            SizedBox(height: 40),
-            DropdownButton(
-              items: companyList.map((item) {
-                return new DropdownMenuItem(
-                  child: new Text(item.company),
-                  value: item.companyCode,
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedCompany = value;
-                });
-              },
-              value: _selectedCompany,
-            ),
-            TextFormField(
-              validator: requiredFieldValidator,
-              controller: _usernameTextController,
-              autofillHints: [AutofillHints.username],
-              decoration: InputDecoration(
-                labelText: 'Username',
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-              ),
-            ),
-            TextFormField(
-              validator: requiredFieldValidator,
-              controller: _passwordTextController,
-              autofillHints: [AutofillHints.password],
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-              ),
-            ),
-            SizedBox(height: 16),
-            RaisedButton(
-              onPressed: () async {
-                if (!_formKey.currentState.validate()) return;
-                _processLogin();
-              },
-              child: const Text('Login'),
-            ),
-          ]),
-        ),
+                  ]),
+            )),
       ),
     );
   }
@@ -143,13 +160,16 @@ class _LoginViewState extends State<LoginView> {
   }
 
   _getDeviceModel() async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    if (Platform.isAndroid) {
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      return androidInfo.model;
-    } else if (Platform.isIOS) {
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      return iosInfo.model;
+    if (kIsWeb) {
+    } else {
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        return androidInfo.model;
+      } else if (Platform.isIOS) {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        return iosInfo.model;
+      }
     }
     return "";
   }
