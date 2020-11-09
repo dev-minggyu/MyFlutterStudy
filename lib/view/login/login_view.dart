@@ -27,10 +27,13 @@ class _LoginViewState extends State<LoginView> {
 
   List<Company> companyList = List<Company>();
   int _selectedCompany;
+  Image logoImage;
 
   @override
   void initState() {
     super.initState();
+    logoImage = Image.asset(AssetConstant.LOGIN_LOGO);
+
     _loginViewModel = LoginViewModel();
     _progressDialog = ProgressDialog(context);
     _progressDialog.style(progressWidget: CircularProgressIndicator());
@@ -55,23 +58,12 @@ class _LoginViewState extends State<LoginView> {
               child: Column(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
+                  children: [
                     Padding(
-                        padding: EdgeInsets.only(top: 70),
-                        child: Wrap(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Image.asset(AssetConstant.LOGIN_LOGO),
-                                Text("로그인",
-                                    style: const TextStyle(
-                                        color: const Color(0xff212121),
-                                        fontSize: 33.0))
-                              ],
-                            )
-                          ],
-                        )),
+                        padding: EdgeInsets.only(top: 70), child: logoImage),
+                    Text("로그인",
+                        style: TextStyle(
+                            color: Color(0xff212121), fontSize: 33.0)),
                     SizedBox(height: 40),
                     DropdownButton(
                       isExpanded: true,
