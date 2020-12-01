@@ -85,7 +85,7 @@ class _HomeViewState extends State<HomeView> {
                         width: 50,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            color: Color(0xff69b4ef)),
+                            color: Color(_getCountColor(_documentCount.ingCount))),
                         padding: EdgeInsets.all(5),
                         child: Text(_documentCount.ingCount.toString(),
                             style:
@@ -108,7 +108,7 @@ class _HomeViewState extends State<HomeView> {
                         width: 50,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            color: Color(0xff69b4ef)),
+                            color: Color(_getCountColor(_documentCount.approvalIngCount))),
                         padding: EdgeInsets.all(5),
                         child: Text(_documentCount.approvalIngCount.toString(),
                             style:
@@ -131,7 +131,7 @@ class _HomeViewState extends State<HomeView> {
                         width: 50,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            color: Color(0xff69b4ef)),
+                            color: Color(_getCountColor(_documentCount.futureIngCount))),
                         padding: EdgeInsets.all(5),
                         child: Text(_documentCount.futureIngCount.toString(),
                             style:
@@ -154,7 +154,7 @@ class _HomeViewState extends State<HomeView> {
                         width: 50,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            color: Color(0xff69b4ef)),
+                            color: Color(_getCountColor(_documentCount.doneCount))),
                         padding: EdgeInsets.all(5),
                         child: Text(_documentCount.doneCount.toString(),
                             style:
@@ -177,7 +177,7 @@ class _HomeViewState extends State<HomeView> {
                         width: 50,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            color: Color(0xff69b4ef)),
+                            color: Color(_getCountColor(_documentCount.returnCount))),
                         padding: EdgeInsets.all(5),
                         child: Text(_documentCount.returnCount.toString(),
                             style:
@@ -204,7 +204,7 @@ class _HomeViewState extends State<HomeView> {
                         width: 50,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            color: Color(0xff69b4ef)),
+                            color: Color(_getCountColor(_documentCount.receiveCount))),
                         padding: EdgeInsets.all(5),
                         child: Text(_documentCount.receiveCount.toString(),
                             style:
@@ -217,6 +217,14 @@ class _HomeViewState extends State<HomeView> {
         ]),
       ),
     );
+  }
+
+  int _getCountColor(int count) {
+    if (count > 0) {
+      return 0xff69b4ef;
+    } else {
+      return 0xffe4e4e4;
+    }
   }
 
   _getDocumentCount() async {
